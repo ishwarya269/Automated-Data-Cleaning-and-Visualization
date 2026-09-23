@@ -54,14 +54,13 @@ The project automatically generates 6–8 charts based on the available data, in
 
 ### 📊 VS Code – Generated Visualizations
 
-![Bar Chart 1](screenshots/screenshot_1.png)
+![Screenshot 1](./screenshot%201.png)
 
-![Bar Chart 2](screenshots/screenshot_2.png)
+![Screenshot 2](./screenshot%202.png)
 
-![Bar Chart 3](screenshots/screenshot_3.png)
+![Screenshot 3](./screenshot%203.png)
 
-![Bar Chart 4](screenshots/screenshot_4.png)
-
+![Screenshot 4](./screenshot%204.png)
 
 ## 🚀 Future Improvements
 
