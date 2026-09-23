@@ -1,0 +1,102 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import mysql.connector
+
+print("1. Excel File")
+print("2. SQL Database")
+
+choice = input("\nEnter 1 or 2: ")
+
+if choice == "1":
+    excel_path = input("Enter Excel File Path: ")
+    df = pd.read_excel(excel_path)
+    print("Data loaded from Excel!")
+
+
+elif choice == "2":
+    password = input("Enter MySQL Password: ")
+    database = input("Enter Database Name: ")
+    query    = input("Enter SQL Query (e.g. SELECT * FROM students): ")
+    con      = mysql.connector.connect(
+                    host     = "localhost",
+                    user     = "root",
+                    password = password,
+                    database = database
+               )
+    df = pd.read_sql(query, con)
+    con.close()
+    print("Data loaded from SQL!")
+
+else:
+    print("Invalid choice! Enter 1 or 2.")
+    exit()
+
+
+print("\nFirst 5 Rows")
+print(df.head())
+
+print("\nShape")
+print(df.shape)
+
+print("\nColumns")
+print(df.columns)
+
+print("\nData Types")
+print(df.dtypes)
+
+print("\nStatistics")
+print(df.describe())
+
+print("\nMissing Values")
+print(df.isnull().sum())
+
+# ── Fill Numeric Null Values ───────────────────
+numeric = df.select_dtypes(include="number").columns
+df[numeric] = df[numeric].fillna(df[numeric].mean())
+
+# ── Fill Text Null Values ──────────────────────
+text = df.select_dtypes(include="object").columns
+df[text] = df[text].fillna("Unknown")
+
+# ── Remove Duplicates ──────────────────────────
+print("\nRows Before :", df.shape)
+df.drop_duplicates(inplace=True)
+print("Rows After  :", df.shape)
+
+# ── Remove Extra Spaces in Column Names ────────
+df.columns = df.columns.str.strip()
+
+# ── Save Cleaned File ──────────────────────────
+df.to_excel("Cleaned_Data.xlsx", index=False)
+print("\n Cleaned file saved as Cleaned_Data.xlsx")
+
+# ── Basic Charts ───────────────────────────────
+
+# Department Bar Chart
+if "Department" in df.columns:
+    df["Department"].value_counts().plot(kind="bar")
+    plt.title("Employees by Department")
+    plt.xlabel("Department")
+    plt.ylabel("Count")
+    plt.show()
+
+# Salary Histogram
+if "Salary" in df.columns:
+    df["Salary"].plot(kind="hist", bins=10)
+    plt.title("Salary Distribution")
+    plt.xlabel("Salary")
+    plt.show()
+
+# Salary Box Plot
+if "Salary" in df.columns:
+    df.boxplot(column="Salary")
+    plt.title("Salary Box Plot")
+    plt.show()
+
+# Age vs Salary Scatter Plot
+if "Age" in df.columns and "Salary" in df.columns:
+    plt.scatter(df["Age"], df["Salary"])
+    plt.xlabel("Age")
+    plt.ylabel("Salary")
+    plt.title("Age vs Salary")
+    plt.show()
